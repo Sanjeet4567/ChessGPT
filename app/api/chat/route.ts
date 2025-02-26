@@ -1,7 +1,6 @@
 import { DataAPIClient } from "@datastax/astra-db-ts"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import {convertToCoreMessages, streamText,} from "ai"
-import { log } from "console";
 import {google} from "@ai-sdk/google"
 import { experimental_wrapLanguageModel as wrapLanguageModel } from "ai"
 import { Experimental_LanguageModelV1Middleware as middlewarev1 } from "ai";
@@ -15,13 +14,13 @@ const {
   } = process.env; 
 
 const customMiddleware:middlewarev1={}
-export const geminiFlashModel = wrapLanguageModel({
+const geminiFlashModel = wrapLanguageModel({
     model:google("gemini-1.5-flash-002"),
     middleware: customMiddleware,
   });
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+//const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 const embeddingModel=genAI.getGenerativeModel({model:"text-embedding-004"})
 
 
@@ -50,7 +49,7 @@ const embeddingModel=genAI.getGenerativeModel({model:"text-embedding-004"})
             const docsMap=documents?.map(doc=>doc.text)
             docContext=JSON.stringify(docsMap)
         }catch(err){
-            console.log("Error querring db....")
+            console.log("Error querring db....",err)
     
         }
 
@@ -58,7 +57,7 @@ const embeddingModel=genAI.getGenerativeModel({model:"text-embedding-004"})
             role:"system",
             content:`
                 You are an AI assistant who knows everything about Chess. Use the below context to augment what you know about Chess. The context will provide you  with the most recent page data from wikipedia, the official Chess and others.
-                If the context doesn't include the information you need answer based on your existing knowledge and don't mention the source of your information or what the context does or doesn't include.
+                If the context doesn't include the information you need answer based on your existing knowledge and "don't mention the source of your information or what the context does or doesn't include".
                 Format responses using markdown where applicable and don't return images.
 
                 
@@ -87,7 +86,7 @@ const embeddingModel=genAI.getGenerativeModel({model:"text-embedding-004"})
         })
         return response.toDataStreamResponse({})
 
-    }catch(err){
-        throw err
+    }catch(error){
+        throw error
     }
   }
