@@ -55,6 +55,17 @@ section.populated::-webkit-scrollbar{
   overflow-y:scroll;
   
 }
+@media only screen and (max-width: 768px) {
+  .starter-text{
+    display: none;
+  }
+  .prompt-suggestion-row{
+    width: 100%;
+    display: flex;
+    overflow-x: scroll;
+  }
+
+}
 
 
 .starter-text {
