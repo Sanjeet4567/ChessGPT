@@ -15,7 +15,7 @@ const {
 
 const customMiddleware:middlewarev1={}
 const geminiFlashModel = wrapLanguageModel({
-    model:google("gemini-1.5-flash-002"),
+    model:google("gemini-2.5-flash"),
     middleware: customMiddleware,
   });
 
